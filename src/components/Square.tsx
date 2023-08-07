@@ -1,8 +1,22 @@
-const Square: React.FC = () => {
+interface ISquareProps {
+    onClick: () => void;
+    value: "X" | "O" | null;
+}
+
+const Square: React.FC<ISquareProps> = ({ onClick, value }) => {
+    if (!value) {
+        return (
+            <>
+                <button className="board-square" onClick={onClick}>
+                    {value}
+                </button>
+            </>
+        );
+    }
     return (
-        <>
-            <button className="board-square">X</button>
-        </>
+        <button disabled className={`board-square square_${value}`}>
+            {value}
+        </button>
     );
 };
 
