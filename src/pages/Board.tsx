@@ -14,7 +14,7 @@ const Board: React.FC = () => {
 
     const [currentPlayer, setCurrentPlayer] = useState<"X" | "O">(activePLayer);
 
-    const [winner, setWinner] = useState<TPlayer>(null);
+    const [winner, setWinner] = useState<string | null>(null);
 
     const setSquareValue = (index: number) => {
         const data = square.map((value, i) => {
@@ -57,20 +57,35 @@ const Board: React.FC = () => {
 
     useEffect(() => {
         const winnerPlayer = calWinner(square);
+
+        if (winnerPlayer) {
+            setWinner(`${winnerPlayer} is the winner `);
+        } else if (
+            !winnerPlayer &&
+            !square.filter((square) => !square).length
+        ) {
+            setWinner("Both player won,Reload for new game");
+        }
     });
 
     return (
         <div className="board-wrapper">
-            <p>Hey {currentPlayer}, It's your turn</p>
+            {winner ? (
+                <p>{winner}</p>
+            ) : (
+                <p>Hey {currentPlayer}, It's your turn</p>
+            )}
             <Grid columns={3} centered>
                 {Array(9)
                     .fill(null)
                     .map((value, index) => {
                         return (
-                            <Grid.Column className="board-column">
+                            <Grid.Column className="board-column" key={index}>
                                 <Square
+                                    key={index}
                                     onClick={() => setSquareValue(index)}
                                     value={square[index]}
+                                    winner={winner}
                                 />
                             </Grid.Column>
                         );
